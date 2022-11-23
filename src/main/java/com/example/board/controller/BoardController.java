@@ -1,11 +1,18 @@
 package com.example.board.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +28,7 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 	
-	// 첫번째 방법
+	// 작성 : 첫번째 방법
 	@PostMapping("/writeboard")
 	public ResponseEntity<String> writeboard(@RequestParam("writer") String writer,
 			@RequestParam("password") String password,
@@ -51,7 +58,7 @@ public class BoardController {
 		return res;
 	} 
 	
-	// 두번째 방법 : 테이블간 연동되지 않게 하기 위해 Embedded 
+	// 작성 : 두번째 방법, 테이블간 연동되지 않게 하기 위해 Embedded 
 	@PostMapping("/writeboard2")
 	public ResponseEntity<String> writeboard2 (@ModelAttribute Board board){
 		ResponseEntity<String> res = null;
@@ -63,6 +70,35 @@ public class BoardController {
 			res = new ResponseEntity<String> ("게시글 저장 실패", HttpStatus.BAD_REQUEST);
 		}
 		return res;
+	}
+	
+	// 상세페이지 조회
+	@GetMapping("/boarddetail/{id}")
+	public ResponseEntity<Board> detailboard (@PathVariable Integer id){
+		ResponseEntity<Board> res = null;
+		try {
+			Board board = boardService.detailBoard(id);
+			res = new ResponseEntity<Board> (board, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();	
+			res = new ResponseEntity<Board> (HttpStatus.BAD_REQUEST);
+		}
+		return res;
+	}
+	
+	// 상세페이지 : 이미지 가져오기
+	@GetMapping("/img/{filename}")
+	public void imageView(@PathVariable String filename, HttpServletResponse response) {
+		try {
+			String path = "C:/Ebina/upload-file/";
+			FileInputStream fis = new FileInputStream(path+filename);
+			OutputStream out = response.getOutputStream();
+			FileCopyUtils.copy(fis, out);
+			out.flush();
+		} catch (Exception e) {
+			e.printStackTrace();	
+		}
+	
 	}
 	
 
