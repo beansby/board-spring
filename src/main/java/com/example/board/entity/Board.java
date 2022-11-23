@@ -1,10 +1,13 @@
 package com.example.board.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,5 +39,8 @@ public class Board {
 	
 	@Column
 	private String filename;
+	
+	@Embedded
+	private MultipartFile file;
 
 }
