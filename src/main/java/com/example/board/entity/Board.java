@@ -40,7 +40,7 @@ public class Board {
 	@Column
 	private String filename;
 	
-	@Embedded
-	private MultipartFile file;
+//	@Embedded
+//	private MultipartFile file;
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -49,7 +50,7 @@ public class BoardController {
 				file.transferTo(dFile);
 			}
 											// id - AI : save 될 때 값을 가져옴 => @AllArgsConstructor
-			boardService.writeBoard(new Board(null, writer, password, subject, content, filename, null));
+			boardService.writeBoard(new Board (null, writer, password, subject, content, filename));
 			
 			res = new ResponseEntity<String> ("게시글 저장 성공", HttpStatus.OK);
 		} catch (Exception e) {
@@ -61,10 +62,10 @@ public class BoardController {
 	
 	// 작성 : 두번째 방법, 테이블간 연동되지 않게 하기 위해 Embedded 
 	@PostMapping("/writeboard2")
-	public ResponseEntity<String> writeboard2 (@ModelAttribute Board board){
+	public ResponseEntity<String> writeboard2 (@ModelAttribute Board board, @RequestParam(name="file", required =false) MultipartFile file){
 		ResponseEntity<String> res = null;
 		try {
-			boardService.writeBoard2(board);
+			boardService.writeBoard2(board, file);
 			res = new ResponseEntity<String> ("게시글 저장 성공", HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();	
