@@ -2,6 +2,7 @@ package com.example.board.service;
 
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,18 @@ public class BoardService {
 		boardRepository.save(board);
 	}
 	
+	// 상세페이지
 	public Board detailBoard (Integer id) throws Exception {
 		Optional<Board> oboard = boardRepository.findById(id);
 		if(oboard.isPresent()) 
 			return oboard.get();
 		throw new Exception("글 번호 오류");
+	}
+	
+	// 글 목록
+	public List<Board> findList() throws Exception{
+		List<Board> boards = boardRepository.findAll();
+		return boards;		
 	}
 
 }

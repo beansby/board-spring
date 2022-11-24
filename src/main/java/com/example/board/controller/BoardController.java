@@ -3,6 +3,7 @@ package com.example.board.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -98,7 +99,21 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();	
 		}
+	}
 	
+	// 글 목록 
+	@GetMapping("/boardlist")
+	public ResponseEntity<List<Board>> findList() {
+		ResponseEntity<List<Board>> res = null;
+		List<Board> boards = null;
+		try {
+			boards = boardService.findList();
+			res = new ResponseEntity<List<Board>> (boards, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();	
+			res = new ResponseEntity<List<Board>> (boards, HttpStatus.BAD_REQUEST);
+		}
+		return res;
 	}
 	
 
