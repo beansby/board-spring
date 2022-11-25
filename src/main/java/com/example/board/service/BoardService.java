@@ -28,7 +28,7 @@ public class BoardService {
 	public void writeBoard2(Board board, MultipartFile file) throws Exception {
 		String filename = null;
 		if (file != null && !file.isEmpty()) {
-			String path = "C:/Ebina/upload-file/";
+			String path = "C:/Ebina/react-js/board-app/upload-file/";
 			filename = file.getOriginalFilename();
 			File dFile = new File(path+filename);
 			file.transferTo(dFile);

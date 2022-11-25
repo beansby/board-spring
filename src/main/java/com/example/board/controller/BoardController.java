@@ -43,7 +43,7 @@ public class BoardController {
 			String filename = null; 
 			if (file != null && !file.isEmpty()) {
 				// 특정 서버에 저장 : 업로드 폴더 지정 => 파일 업로드 -> 서비스로 옮겨주고 싶음..?
-				String path = "C:/Ebina/upload-file/";
+				String path = "C:/Ebina/react-js/board-app/upload-file/";
 				// 파일 있을 땐 파일명 지정, 없을땐 null
 				filename = file.getOriginalFilename();
 				File dFile = new File(path+filename);
@@ -92,7 +92,7 @@ public class BoardController {
 	@GetMapping("/img/{filename}")
 	public void imageView(@PathVariable String filename, HttpServletResponse response) {
 		try {
-			String path = "C:/Ebina/upload-file/";
+			String path = "C:/Ebina/react-js/board-app/upload-file/";
 			FileInputStream fis = new FileInputStream(path+filename);
 			OutputStream out = response.getOutputStream();
 			FileCopyUtils.copy(fis, out);
