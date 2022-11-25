@@ -52,4 +52,16 @@ public class BoardService {
 		return boards;		
 	}
 
+	// 글 수정
+	public void updateBoard (Integer id, String subject, String content) throws Exception {
+		Optional<Board> oboard = boardRepository.findById(id);
+		if(oboard.isEmpty()){
+			throw new Exception("글 조회 오류");
+		}
+		Board board = oboard.get();
+		board.setSubject(subject);
+		board.setContent(content);
+		boardRepository.save(board);
+	}
+
 }

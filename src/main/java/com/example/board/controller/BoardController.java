@@ -12,12 +12,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.board.entity.Board;
@@ -113,6 +108,21 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();	
 			res = new ResponseEntity<List<Board>> (boards, HttpStatus.BAD_REQUEST);
+		}
+		return res;
+	}
+
+	// 글 수정
+	@PutMapping("/updateboard/{id}")
+	public ResponseEntity<String> updateBoard(@PathVariable Integer id, @RequestParam("subject") String subject, @RequestParam("content") String content){
+		ResponseEntity<String> res = null;
+		try {
+			Board board = boardService.detailBoard(id);
+			boardService.updateBoard(id, subject, content);
+			res = new ResponseEntity<String>("게시글 수정 성공", HttpStatus.OK);
+		} catch (Exception e){
+			e.printStackTrace();
+			res = new ResponseEntity<String>("게시글 수정 실패", HttpStatus.BAD_REQUEST);
 		}
 		return res;
 	}
