@@ -3,6 +3,7 @@ package com.example.board.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,23 @@ public class BoardService {
 		board.setSubject(subject);
 		board.setContent(content);
 		boardRepository.save(board);
+	}
+
+	// 글 삭제
+	public Integer deleteBoard(Integer id, String password) throws Exception {
+		Optional<Board> oboard = boardRepository.findById(id);
+		// id가 없으면 -1
+		if(oboard.isEmpty()){
+			return -1;
+		}
+		// 비밀번호가 일치하지 않으면 -2
+		Board board = oboard.get();
+		if (!Objects.equals(board.getPassword(), password)) {
+			return -2;
+		}
+		// 삭제 완료됐으면 0
+		boardRepository.delete(board);
+		return 0;
 	}
 
 }

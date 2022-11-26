@@ -126,6 +126,22 @@ public class BoardController {
 		}
 		return res;
 	}
+
+	// 글 삭제
+	@PutMapping("/deleteboard/{id}")
+	public ResponseEntity<Integer> deleteBoard(@PathVariable Integer id, @RequestParam("password") String password){
+		ResponseEntity<Integer> res = null;
+		try {
+			Integer res_msg = boardService.deleteBoard(id, password);
+			res = new ResponseEntity<Integer> (res_msg, HttpStatus.OK);
+		} catch (Exception e){
+			e.printStackTrace();
+			res = new ResponseEntity<Integer>(HttpStatus.BAD_REQUEST);
+		}
+		return res;
+	}
+
+
 	
 
 }
