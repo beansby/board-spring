@@ -3,12 +3,16 @@ package com.example.board.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.board.vo.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -141,6 +145,29 @@ public class BoardController {
 		return res;
 	}
 
+	// 페이징 처리
+	// pageInfo의 데이터타입 String, boards의 데이터타입 Object
+	@GetMapping(value = {"/page/{page}", "/page"})
+	public ResponseEntity<Map<String, Object>> pageBoard(@PathVariable(required = false) Integer page) {
+		if (page == null){
+			// 초깃값 설정
+			page = 1;
+		}
+		ResponseEntity<Map<String, Object>> res = null;
+		try {
+			PageInfo pageInfo = new PageInfo();
+			pageInfo.setCurPage(page);
+			List<Board> boards = boardService.pageBoard(pageInfo);
+			Map<String, Object> map = new HashMap<String, Object>();
+			// string, object
+			map.put("pageInfo", pageInfo);
+			map.put("boards", boards);
+			res = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+		} catch (Exception e) {
+			res = new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
+		}
+		return res;
+	}
 
 	
 

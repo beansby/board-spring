@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.example.board.vo.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,4 +85,27 @@ public class BoardService {
 		return 0;
 	}
 
+	// 페이징 처리
+	public List<Board> pageBoard(PageInfo pageInfo) throws Exception {
+		// page는 컨트롤러에서 넘겨줌 : 0부터 시작하기 때문에 -1
+		PageRequest pageRequest = PageRequest.of(pageInfo.getCurPage() -1, 5, Sort.by(Sort.Direction.DESC, "id"));
+		Page<Board> pages = boardRepository.findAll(pageRequest);
+
+		int maxPage = pages.getTotalPages();
+		// 정수의 값을 가져오기 위해 10으로 나눈 후 다시 10을 곱해줌 (시작페이지는 11, 21, 31... 이기 때문에 마지막에 +1을 해줌)
+		// 페이지처리가 5개씩 현재페이지는 13일때 startPage = 11, endPage = 15가 되어야 함 => 13/5*5+1 = 11
+		int startPage = pageInfo.getCurPage() / 10 * 10 + 1;
+		// 11+5-1 = 15
+		int endPage = startPage + 10 - 1;
+
+		if (endPage > maxPage) {
+			endPage = maxPage;
+		}
+		pageInfo.setAllPage(maxPage);
+		pageInfo.setStartPage(startPage);
+		pageInfo.setEndPage(endPage);
+
+		// Page 타입을 List 형태로 변환해서 반환하기 위해서
+		return pages.getContent();
+	}
 }
